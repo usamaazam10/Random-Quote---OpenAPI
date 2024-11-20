@@ -1,0 +1,59 @@
+openapi: 3.0.3
+info:
+  title: Quotes API
+  description: API to retrieve quotes based on categories.
+  version: 1.0.0
+servers:
+  - url: https://api.api-ninjas.com/v1
+    description: Production server
+paths:
+  /quotes:
+    get:
+      summary: Retrieve quotes based on a specific category
+      description: Returns a list of quotes matching the specified category.
+      parameters:
+        - name: category
+          in: query
+          description: The category of quotes to fetch (e.g., happiness, motivation, etc.)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of quotes matching the specified category
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Quote'
+        '400':
+          description: Invalid request, category is missing or incorrect.
+        '401':
+          description: Unauthorized, API key is missing or invalid.
+        '500':
+          description: Internal server error.
+components:
+  schemas:
+    Quote:
+      type: object
+      properties:
+        quote:
+          type: string
+          description: The quote text.
+          example: "I love my family and I had a very wonderful, magical childhood. But New Jersey was actually a very cold place. There was such an intense concentration of wealth, and such a low concentration of any actual human happiness."
+        author:
+          type: string
+          description: The author of the quote.
+          example: "Ezra Miller"
+        category:
+          type: string
+          description: The category of the quote.
+          example: "happiness"
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+security:
+  - apiKeyAuth: []
